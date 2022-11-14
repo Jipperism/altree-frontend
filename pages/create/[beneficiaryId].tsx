@@ -1,11 +1,10 @@
 import { ReactElement } from "react";
-import { RecipientLayout } from "../components/layouts/recipient";
+import { RecipientLayout } from "../../components/layouts/recipient";
 import { useAccount } from "wagmi";
-import { Spinner } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 
 const CreateForm = dynamic(
-  () => import("../components/CreateForm").then((m) => m.CreateForm),
+  () => import("../../components/CreateForm").then((m) => m.CreateForm),
   {
     ssr: false,
   }

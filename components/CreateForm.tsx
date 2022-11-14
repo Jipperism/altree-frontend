@@ -5,92 +5,124 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  Slider,
+  SliderFilledTrack,
+  SliderMark,
+  SliderThumb,
+  SliderTrack,
+  Spinner,
   VStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { ethers } from "ethers";
 
 export const CreateForm = ({ recipientId }: { recipientId: string }) => {
-  const { push } = useRouter();
+  const { push, query, isReady } = useRouter();
+
+  if (!isReady) {
+    return <Spinner />;
+  }
+
+  const beneficiaryId = query["beneficiaryId"] as string;
+
+  if (!beneficiaryId || !ethers.utils.isAddress(beneficiaryId)) {
+    return <div>Please provide a valid beneficiary address</div>;
+  }
+
+  if (!recipientId || !ethers.utils.isAddress(recipientId)) {
+    return <div>Please provide a valid recipient address</div>;
+  }
+
+  const labelStyles = {
+    mt: "2",
+    ml: "-2.5",
+    fontSize: "sm",
+  };
+
   return (
-    <Formik
-      initialValues={{
-        beneficiaryId: "" as string | undefined,
-        label: "" as string | undefined,
-        fraction: 0.1,
-      }}
-      onSubmit={async ({ label, beneficiaryId, fraction }) => {
-        if (!recipientId || !beneficiaryId || !label || !fraction) {
-          return;
-        }
+    <>
+      <Formik
+        initialValues={{
+          label: "" as string | undefined,
+          fraction: 10,
+        }}
+        onSubmit={async ({ label, fraction }) => {
+          if (!recipientId || !beneficiaryId || !label || !fraction) {
+            return;
+          }
 
-        await push({
-          pathname: "/confirm",
-          query: {
-            recipientId,
-            beneficiaryId,
-            label,
-            donationFraction: fraction,
-          },
-        });
-      }}
-    >
-      {({
-        values,
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        isSubmitting,
-        /* and other goodies */
-      }) => (
-        <form onSubmit={handleSubmit}>
-          <VStack spacing={4}>
-            <FormControl>
-              <FormLabel>Label</FormLabel>
-              <Input
-                name="label"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                type="text"
-                value={values.label}
-              />
-              <FormHelperText>Human readable identifier</FormHelperText>
-            </FormControl>
+          await push({
+            pathname: "/confirm",
+            query: {
+              recipientId,
+              beneficiaryId,
+              label,
+              donationFraction: fraction,
+            },
+          });
+        }}
+      >
+        {({
+          values,
+          handleSubmit,
+          isSubmitting,
+          setFieldValue,
+          /* and other goodies */
+        }) => {
+          const colorStep = Math.max(Math.ceil(values.fraction / 20), 0);
+          const color = `green.${colorStep * 100}`;
+          return (
+            <form onSubmit={handleSubmit}>
+              <VStack spacing={4}>
+                <FormControl>
+                  <FormLabel>Fraction</FormLabel>
+                  <Slider
+                    mt={8}
+                    value={values.fraction}
+                    name="fraction"
+                    onChange={(e) => setFieldValue("fraction", e)}
+                  >
+                    <SliderMark value={25} {...labelStyles}>
+                      25%
+                    </SliderMark>
+                    <SliderMark value={50} {...labelStyles}>
+                      50%
+                    </SliderMark>
+                    <SliderMark value={75} {...labelStyles}>
+                      75%
+                    </SliderMark>
+                    <SliderMark
+                      value={values.fraction}
+                      textAlign="center"
+                      bg="green.600"
+                      color="white"
+                      mt="-10"
+                      ml="-5"
+                      w="12"
+                    >
+                      {values.fraction}%
+                    </SliderMark>
+                    <SliderTrack>
+                      <SliderFilledTrack bg={color} />
+                    </SliderTrack>
+                    <SliderThumb />
+                  </Slider>
+                  <FormHelperText mt={6}>Fraction to be donated</FormHelperText>
+                </FormControl>
+              </VStack>
 
-            <FormControl>
-              <FormLabel>Beneficiary</FormLabel>
-              <Input
-                name="beneficiaryId"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                type="text"
-                value={values.beneficiaryId}
-              />
-              <FormHelperText>Address of the beneficiary</FormHelperText>
-            </FormControl>
-
-            <FormControl>
-              <FormLabel>Fraction</FormLabel>
-              <Input
-                name="fraction"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                type="number"
-                value={values.fraction}
-              />
-              <FormHelperText>Fraction to be donated</FormHelperText>
-            </FormControl>
-          </VStack>
-
-          <Button
-            colorScheme="green"
-            type="submit"
-            disabled={isSubmitting}
-            mt={4}
-          >
-            Review
-          </Button>
-        </form>
-      )}
-    </Formik>
+              <Button
+                colorScheme="green"
+                type="submit"
+                disabled={isSubmitting}
+                mt={4}
+              >
+                Review
+              </Button>
+            </form>
+          );
+        }}
+      </Formik>
+    </>
   );
 };

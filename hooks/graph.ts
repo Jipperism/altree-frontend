@@ -10,3 +10,6 @@ export const useGetRoutes = (userId: string) =>
 
 export const useGetRoute = (routeId: string) =>
   useQuery(["route", routeId], () => sdk.GetRoute({ routeId }));
+
+export const useGetBeneficiaries = () =>
+  useQuery(["beneficiaries"], () => sdk.GetBeneficiaries());

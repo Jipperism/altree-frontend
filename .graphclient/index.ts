@@ -730,6 +730,12 @@ const merger = new(BareMerger as any)({
     get documents() {
       return [
       {
+        document: GetBeneficiariesDocument,
+        get rawSDL() {
+          return printWithCache(GetBeneficiariesDocument);
+        },
+        location: 'GetBeneficiariesDocument.graphql'
+      },{
         document: GetRouteDocument,
         get rawSDL() {
           return printWithCache(GetRouteDocument);
@@ -779,6 +785,11 @@ export function getBuiltGraphSDK<TGlobalContext = any, TOperationContext = any>(
   const sdkRequester$ = getBuiltGraphClient().then(({ sdkRequesterFactory }) => sdkRequesterFactory(globalContext));
   return getSdk<TOperationContext, TGlobalContext>((...args) => sdkRequester$.then(sdkRequester => sdkRequester(...args)));
 }
+export type GetBeneficiariesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetBeneficiariesQuery = { beneficiaries: Array<Pick<Beneficiary, 'id' | 'name'>> };
+
 export type GetRouteQueryVariables = Exact<{
   routeId: Scalars['ID'];
 }>;
@@ -800,6 +811,14 @@ export type GetRoutesQuery = { routes: Array<(
   )> };
 
 
+export const GetBeneficiariesDocument = gql`
+    query GetBeneficiaries {
+  beneficiaries {
+    id
+    name
+  }
+}
+    ` as unknown as DocumentNode<GetBeneficiariesQuery, GetBeneficiariesQueryVariables>;
 export const GetRouteDocument = gql`
     query GetRoute($routeId: ID!) {
   route(id: $routeId) {
@@ -831,9 +850,13 @@ export const GetRoutesDocument = gql`
 
 
 
+
 export type Requester<C = {}, E = unknown> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R> | AsyncIterable<R>
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
+    GetBeneficiaries(variables?: GetBeneficiariesQueryVariables, options?: C): Promise<GetBeneficiariesQuery> {
+      return requester<GetBeneficiariesQuery, GetBeneficiariesQueryVariables>(GetBeneficiariesDocument, variables, options) as Promise<GetBeneficiariesQuery>;
+    },
     GetRoute(variables: GetRouteQueryVariables, options?: C): Promise<GetRouteQuery> {
       return requester<GetRouteQuery, GetRouteQueryVariables>(GetRouteDocument, variables, options) as Promise<GetRouteQuery>;
     },
