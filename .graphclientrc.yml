@@ -1,0 +1,8 @@
+sources:
+  - name: altree-v1
+    handler:
+      graphql:
+        endpoint: https://api.thegraph.com/subgraphs/name/bitbeckers/altree
+
+documents:
+  - './documents/**/*.graphql'

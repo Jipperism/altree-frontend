@@ -1,0 +1,8 @@
+query GetRoute($routeId: ID!) {
+    route(id: $routeId) {
+        name
+        beneficiary {
+            name
+        }
+    }
+}

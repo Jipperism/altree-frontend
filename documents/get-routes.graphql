@@ -1,0 +1,13 @@
+query GetRoutes($userId: String!) {
+    routes(where: { user: $userId }) {
+        id
+        name
+        user {
+            id
+        }
+        beneficiary {
+            id
+            name
+        }
+    }
+}

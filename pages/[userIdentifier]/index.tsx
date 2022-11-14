@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 import { Container, Spinner } from "@chakra-ui/react";
-import { RecipientLayout } from "../components/layouts/recipient";
+import { RecipientLayout } from "../../components/layouts/recipient";
 import { ReactElement } from "react";
 import Head from "next/head";
-import { UserOverviewPage } from "../components/UserPage";
+import { UserOverviewPage } from "../../components/UserPage";
 
 const UserPage = (): JSX.Element => {
   const { query, isReady } = useRouter();

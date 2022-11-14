@@ -10,14 +10,23 @@ import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { ChakraProvider } from "@chakra-ui/react";
 
+import type { ReactElement, ReactNode } from "react";
+import type { NextPage } from "next";
+import Head from "next/head";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 const { chains, provider, webSocketProvider } = configureChains(
   [
     chain.mainnet,
     chain.polygon,
     chain.optimism,
     chain.arbitrum,
+    chain.goerli,
+    chain.polygonMumbai,
     ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
-      ? [chain.goerli, chain.kovan, chain.rinkeby, chain.ropsten]
+      ? [chain.kovan, chain.rinkeby, chain.ropsten]
       : []),
   ],
   [
@@ -42,10 +51,6 @@ const wagmiClient = createClient({
   webSocketProvider,
 });
 
-import type { ReactElement, ReactNode } from "react";
-import type { NextPage } from "next";
-import Head from "next/head";
-
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -53,6 +58,8 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
+
+const queryClient = new QueryClient();
 
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
@@ -62,11 +69,18 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <title>Altr.ee</title>
       </Head>
       <ChakraProvider>
-        <WagmiConfig client={wagmiClient}>
-          <RainbowKitProvider theme={darkTheme()} chains={chains}>
-            {getLayout(<Component {...pageProps} />)}
-          </RainbowKitProvider>
-        </WagmiConfig>
+        <QueryClientProvider client={queryClient}>
+          <WagmiConfig client={wagmiClient}>
+            <RainbowKitProvider
+              theme={darkTheme()}
+              chains={chains}
+              initialChain={chain.polygonMumbai}
+            >
+              {getLayout(<Component {...pageProps} />)}
+            </RainbowKitProvider>
+          </WagmiConfig>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
       </ChakraProvider>
     </>
   );
