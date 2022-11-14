@@ -1,8 +1,20 @@
 import { ReactElement } from "react";
 import { RecipientLayout } from "../components/layouts/recipient";
+import { useAccount } from "wagmi";
+import { Spinner } from "@chakra-ui/react";
+import dynamic from "next/dynamic";
+
+const CreateForm = dynamic(
+  () => import("../components/CreateForm").then((m) => m.CreateForm),
+  {
+    ssr: false,
+  }
+);
 
 const CreatePage = () => {
-  return <div>Create page</div>;
+  const { address } = useAccount();
+
+  return <CreateForm recipientId={address!} />;
 };
 
 CreatePage.getLayout = function getLayout(page: ReactElement) {
