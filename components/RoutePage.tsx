@@ -1,5 +1,12 @@
 import { useGetRoute } from "../hooks/graph";
-import { Button, Input, Spinner } from "@chakra-ui/react";
+import {
+  Button,
+  ButtonGroup,
+  Heading,
+  Input,
+  Spinner,
+  Text,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { useMakePayment } from "../hooks/contract";
 import { useAccount } from "wagmi";
@@ -29,7 +36,8 @@ export const RoutePage = ({ routeId }: { routeId: string }) => {
 
   return (
     <>
-      <div>{data?.route?.name}</div>
+      <Heading>{data?.route?.name}</Heading>
+      <Text>{`How much do you want to send?`}</Text>
       <Input
         type="number"
         value={amount}
@@ -37,11 +45,15 @@ export const RoutePage = ({ routeId }: { routeId: string }) => {
           setAmount(e.target.value ? parseFloat(e.target.value) : 0)
         }
       />
-      <Button onClick={onMakePayment}>Make payment</Button>
-      {isSuccess && <div>Payment sent!</div>}
-      {address?.toLowerCase() === data?.route?.user.id && (
-        <Link href={`/release/${routeId}`}>Release overview</Link>
-      )}
+      <ButtonGroup>
+        <Button onClick={onMakePayment}>Make payment</Button>
+        {isSuccess && <div>Payment sent!</div>}
+        {address?.toLowerCase() === data?.route?.user.id && (
+          <Link href={`/release/${routeId}`}>
+            <Button>Release overview</Button>
+          </Link>
+        )}
+      </ButtonGroup>
     </>
   );
 };

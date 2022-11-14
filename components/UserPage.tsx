@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { useEnsAddress } from "wagmi";
-import { SlideFade, Spinner, VStack } from "@chakra-ui/react";
+import { SlideFade, Spinner, VStack, Heading, Text, Spacer } from "@chakra-ui/react";
 import { RouteButton } from "./RouteButton";
 import Link from "next/link";
 import { useGetRoutes } from "../hooks/graph";
@@ -35,6 +35,8 @@ export const UserOverviewPage = ({
   return (
     <>
       <VStack>
+        <Heading>Who do you want to support?</Heading>
+        <Spacer />
         {routes?.routes.map((route) => (
           <Link key={route.id} href={`/${userIdentifier}/${route.id}`} passHref>
             <a>
