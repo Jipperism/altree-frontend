@@ -29,14 +29,7 @@ const { chains, provider, webSocketProvider } = configureChains(
       ? [chain.kovan, chain.rinkeby, chain.ropsten]
       : []),
   ],
-  [
-    // alchemyProvider({
-    //   // This is Alchemy's default API key.
-    //   // You can get your own at https://dashboard.alchemyapi.io
-    //   apiKey: '_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC',
-    // }),
-    publicProvider(),
-  ]
+  [publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({

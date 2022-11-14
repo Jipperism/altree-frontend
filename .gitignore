@@ -42,3 +42,4 @@ yarn-error.log*
 /.idea/modules.xml
 /.idea/prettier.xml
 /.idea/vcs.xml
+/.env

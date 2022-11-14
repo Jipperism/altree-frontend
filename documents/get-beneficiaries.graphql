@@ -1,0 +1,6 @@
+query GetBeneficiaries {
+    beneficiaries {
+        id
+        name
+    }
+}
