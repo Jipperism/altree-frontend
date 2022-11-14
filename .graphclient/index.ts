@@ -786,7 +786,7 @@ export type GetRouteQueryVariables = Exact<{
 
 export type GetRouteQuery = { route?: Maybe<(
     Pick<Route, 'name'>
-    & { beneficiary: Pick<Beneficiary, 'name'> }
+    & { beneficiary: Pick<Beneficiary, 'name'>, user: Pick<User, 'id'> }
   )> };
 
 export type GetRoutesQueryVariables = Exact<{
@@ -806,6 +806,9 @@ export const GetRouteDocument = gql`
     name
     beneficiary {
       name
+    }
+    user {
+      id
     }
   }
 }

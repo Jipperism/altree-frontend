@@ -1,6 +1,8 @@
 import {
   Address,
   useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
   usePrepareSendTransaction,
   useSendTransaction,
 } from "wagmi";
@@ -24,4 +26,14 @@ export const useReleasable = (routeId: string, recipientId: Address) => {
     functionName: "releasable",
     args: [recipientId],
   });
+};
+
+export const useReleaseRoute = (routeId: string, recipientId: Address) => {
+  const { config } = usePrepareContractWrite({
+    address: routeId,
+    abi: routeAbi,
+    functionName: "release",
+    args: [recipientId],
+  });
+  return useContractWrite(config);
 };

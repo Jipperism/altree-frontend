@@ -4,5 +4,8 @@ query GetRoute($routeId: ID!) {
         beneficiary {
             name
         }
+        user {
+            id
+        }
     }
 }

@@ -1,6 +1,6 @@
-import { useReleasable } from "../hooks/contract";
+import { useReleasable, useReleaseRoute } from "../hooks/contract";
 import { Address } from "wagmi";
-import { Spinner } from "@chakra-ui/react";
+import { Button, Spinner } from "@chakra-ui/react";
 import { formatEther } from "ethers/lib/utils";
 
 export const ReleaseOverview = ({
@@ -15,6 +15,8 @@ export const ReleaseOverview = ({
     userId as Address
   );
 
+  const { write } = useReleaseRoute(routeId, userId as Address);
+
   if (isError) {
     console.log(error);
   }
@@ -23,5 +25,12 @@ export const ReleaseOverview = ({
     return <Spinner />;
   }
 
-  return <div>{data ? formatEther(data) : "unknown"}</div>;
+  return (
+    <div>
+      {data ? formatEther(data) : "unknown"}
+      <Button onClick={() => write?.()} colorScheme="green">
+        Release!
+      </Button>
+    </div>
+  );
 };
