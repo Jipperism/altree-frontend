@@ -1,9 +1,15 @@
 import { BeneficiariesList } from "../../components/BeneficiariesList";
 import { ReactElement } from "react";
 import { RecipientLayout } from "../../components/layouts/recipient";
+import { Heading } from "@chakra-ui/react";
 
 const CreatePage = () => {
-  return <BeneficiariesList />;
+  return (
+    <>
+    <Heading>Select pledge recipient</Heading>
+      <BeneficiariesList />
+    </>
+  );
 };
 
 CreatePage.getLayout = function getLayout(page: ReactElement) {
