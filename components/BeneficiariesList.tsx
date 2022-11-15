@@ -22,18 +22,15 @@ export const BeneficiariesList = () => {
         const airtableEntry = airtableData[beneficiary.id];
 
         return (
-          <Link key={beneficiary.id} href={`/create/${beneficiary.id}`}>
-            <Box width="100%" cursor="pointer">
-              <BeneficiaryItem
-                key={beneficiary.id}
-                id={beneficiary.id}
-                name={airtableEntry?.Name}
-                description={airtableEntry?.Description}
-                logoSrc={airtableEntry?.Logo}
-                website={airtableEntry?.Website}
-              />
-            </Box>
-          </Link>
+          <BeneficiaryItem
+            key={beneficiary.id}
+            id={beneficiary.id}
+            name={airtableEntry?.Name}
+            description={airtableEntry?.Description}
+            logoSrc={airtableEntry?.Logo}
+            website={airtableEntry?.Website}
+            showDonateLink
+          />
         );
       })}
     </VStack>

@@ -61,20 +61,20 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       <Head>
         <title>Altr.ee</title>
       </Head>
-      <ChakraProvider>
-        <QueryClientProvider client={queryClient}>
-          <WagmiConfig client={wagmiClient}>
-            <RainbowKitProvider
-              theme={darkTheme()}
-              chains={chains}
-              initialChain={chain.polygonMumbai}
-            >
+      <QueryClientProvider client={queryClient}>
+        <WagmiConfig client={wagmiClient}>
+          <RainbowKitProvider
+            theme={darkTheme()}
+            chains={chains}
+            initialChain={chain.polygonMumbai}
+          >
+            <ChakraProvider>
               {getLayout(<Component {...pageProps} />)}
-            </RainbowKitProvider>
-          </WagmiConfig>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </ChakraProvider>
+            </ChakraProvider>
+          </RainbowKitProvider>
+        </WagmiConfig>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </>
   );
 }
